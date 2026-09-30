@@ -64,7 +64,7 @@ test("produção sem endpoint bloqueia a liberação; prévia exige dados válid
     /consentimento/,
   );
 });
-test("API aceita lead antes de liberar e recebe chave para deduplicação", async (t) => {
+test("API aceita lead antes de liberar sem cabeçalhos bloqueados pelo CORS", async (t) => {
   let request;
   t.mock.method(globalThis, "fetch", async (url, init) => {
     request = { url, init };
@@ -78,7 +78,7 @@ test("API aceita lead antes de liberar e recebe chave para deduplicação", asyn
     { delivered: true },
   );
   assert.equal(request.init.method, "POST");
-  assert.equal(request.init.headers["Idempotency-Key"], "request-1");
+  assert.equal(request.init.headers["Idempotency-Key"], undefined);
   assert.equal(JSON.parse(request.init.body).email, "teste@example.com");
 });
 test("falha da API e falha de conexão não liberam o material", async (t) => {

@@ -91,7 +91,6 @@ export async function submitLead(lead: Lead, options: SubmissionOptions) {
       signal: AbortSignal.timeout(15000),
       headers: {
         "Content-Type": "application/json",
-        "Idempotency-Key": options.submissionId,
         ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       },
       body: JSON.stringify(payload),
