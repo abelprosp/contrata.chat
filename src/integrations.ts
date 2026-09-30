@@ -55,6 +55,7 @@ export function createLeadPayload(lead: Lead, submissionId: string) {
     // Campos no formato esperado pelo webhook da Persoo CRM.
     nome: name,
     telefone: `+55${phone}`,
+    empresa: company,
     quantos_funcionarios_deseja_contratar: lead.hiring,
   };
 }
