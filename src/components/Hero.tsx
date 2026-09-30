@@ -1,4 +1,3 @@
-import { ShieldCheck } from "lucide-react";
 import { Logo, OpenLead } from "./shared";
 import VideoSection from "./VideoSection";
 
@@ -26,9 +25,6 @@ export default function Hero({ play }: { open: OpenLead; play: () => void }) {
         <div className="reference-video">
           <VideoSection play={play} />
         </div>
-        <p className="reference-video-note">
-          <ShieldCheck size={13} /> Demonstração ilustrativa · Dados fictícios
-        </p>
       </div>
     </section>
   );

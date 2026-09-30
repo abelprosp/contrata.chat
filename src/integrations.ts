@@ -52,6 +52,10 @@ export function createLeadPayload(lead: Lead, submissionId: string) {
     consentText: CONSENT_TEXT,
     consentVersion: "2026-09",
     createdAt: new Date().toISOString(),
+    // Campos no formato esperado pelo webhook da Persoo CRM.
+    nome: name,
+    telefone: `+55${phone}`,
+    quantos_funcionarios_deseja_contratar: lead.hiring,
   };
 }
 
@@ -64,12 +68,15 @@ export function track(event: string, properties: Record<string, unknown> = {}) {
 
 type SubmissionOptions = {
   endpoint?: string;
+  authToken?: string;
   preview?: boolean;
   submissionId: string;
 };
 export async function submitLead(lead: Lead, options: SubmissionOptions) {
   const payload = createLeadPayload(lead, options.submissionId);
   const endpoint = options.endpoint ?? import.meta.env?.VITE_LEAD_ENDPOINT;
+  const authToken =
+    options.authToken ?? import.meta.env?.VITE_LEAD_AUTH_TOKEN;
   if (!endpoint) {
     if (options.preview ?? isLeadPreview) return { delivered: false };
     throw new Error(
@@ -84,6 +91,7 @@ export async function submitLead(lead: Lead, options: SubmissionOptions) {
       headers: {
         "Content-Type": "application/json",
         "Idempotency-Key": options.submissionId,
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       },
       body: JSON.stringify(payload),
     });
